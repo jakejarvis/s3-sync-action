@@ -13,5 +13,4 @@ aws s3 sync ${SOURCE_DIR} s3://${AWS_S3_BUCKET} \
             --follow-symlinks \
             --delete \
             --region ${AWS_REGION} \
-            --metadata-directive "REPLACE" \
-            --dryrun
+            --metadata-directive "REPLACE"
