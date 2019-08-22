@@ -1,7 +1,7 @@
 FROM python:3.7-alpine
 
 LABEL "com.github.actions.name"="S3 Sync"
-LABEL "com.github.actions.description"="Sync a directory to a S3 repository"
+LABEL "com.github.actions.description"="Sync a directory to a AWS S3 repository"
 LABEL "com.github.actions.icon"="refresh-cw"
 LABEL "com.github.actions.color"="green"
 

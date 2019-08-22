@@ -14,3 +14,5 @@ aws s3 sync ${SOURCE_DIR} s3://${AWS_S3_BUCKET} \
             --delete \
             --region ${AWS_REGION} \
             --metadata-directive "REPLACE"
+
+rm -rf ~/.aws
