@@ -52,6 +52,4 @@ The following variables should be added as "secrets" in the action's configurati
 
 ## License
 
-[![CC0](http://mirrors.creativecommons.org/presskit/buttons/88x31/svg/cc-zero.svg)](https://creativecommons.org/publicdomain/zero/1.0/)
-
-To the extent possible under law, [Jake Jarvis](https://jarv.is/) has waived all copyright and related or neighboring rights to this work.
+This project is distributed under the [MIT license](LICENSE.md).
