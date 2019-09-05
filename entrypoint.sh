@@ -2,7 +2,7 @@
 
 set -e
 
-mkdir ~/.aws
+mkdir -p ~/.aws
 touch ~/.aws/credentials
 
 echo "[default]
