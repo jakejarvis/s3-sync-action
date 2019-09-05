@@ -22,6 +22,8 @@ jobs:
     steps:
     - uses: actions/checkout@master
     - uses: jakejarvis/s3-sync-action@master
+      with:
+        args: --acl public-read
       env:
         SOURCE_DIR: './public'
         AWS_REGION: 'us-east-1'
