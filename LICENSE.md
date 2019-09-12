@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2019 Jake Jarvis
+Copyright (c) 2019-present Jake Jarvis <jake@jarv.is>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
