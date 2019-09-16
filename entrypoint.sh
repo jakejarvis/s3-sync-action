@@ -22,20 +22,23 @@ if [ -z "$AWS_REGION" ]; then
   exit 1
 fi
 
+# Default to syncing entire repo if SOURCE_DIR not set.
 if [ -z "$SOURCE_DIR" ]; then
   SOURCE_DIR="."
 fi
 
-mkdir -p ~/.aws
-touch ~/.aws/credentials
+# Create a dedicated profile for this action to avoid
+# conflicts with other actions.
+# https://github.com/jakejarvis/s3-sync-action/issues/1
+aws configure --profile s3-sync-action <<-EOF
+${AWS_ACCESS_KEY_ID}
+${AWS_SECRET_ACCESS_KEY}
+${AWS_REGION}
+text
+EOF
 
-echo "[default]
-aws_access_key_id = ${AWS_ACCESS_KEY_ID}
-aws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}" > ~/.aws/credentials
-
+# Use our dedicated profile and suppress verbose messages.
+# All other flags are optional via `args:` directive.
 aws s3 sync ${SOURCE_DIR} s3://${AWS_S3_BUCKET} \
-            --follow-symlinks \
-            --delete \
-            --region ${AWS_REGION} $*
-
-rm -rf ~/.aws
+            --profile s3-sync-action \
+            --no-progress $*
