@@ -37,8 +37,8 @@ jobs:
 
 | Key | Value | Type | Required |
 | ------------- | ------------- | ------------- | ------------- |
-| `SOURCE_DIR` | The local directory you wish to sync/upload to S3. For example, `./public`. | `env` | **Yes** |
 | `AWS_REGION` | The region where you created your bucket in. For example, `us-east-1`. [Full list of regions here.](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions) | `env` | **Yes** |
+| `SOURCE_DIR` | The local directory you wish to sync/upload to S3. For example, `./public`. Defaults to the root of your repository if not provided. | `env` | No |
 
 
 ### Required Secret Variables

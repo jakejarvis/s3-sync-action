@@ -23,8 +23,7 @@ if [ -z "$AWS_REGION" ]; then
 fi
 
 if [ -z "$SOURCE_DIR" ]; then
-  echo "SOURCE_DIR is not set. Quitting."
-  exit 1
+  SOURCE_DIR="."
 fi
 
 mkdir -p ~/.aws
