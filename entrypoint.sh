@@ -39,6 +39,6 @@ EOF
 
 # Use our dedicated profile and suppress verbose messages.
 # All other flags are optional via `args:` directive.
-aws s3 sync ${SOURCE_DIR} s3://${AWS_S3_BUCKET} \
-            --profile s3-sync-action \
-            --no-progress $*
+sh -c "aws s3 sync ${SOURCE_DIR} s3://${AWS_S3_BUCKET} \
+              --profile s3-sync-action \
+              --no-progress $*"
