@@ -23,9 +23,7 @@ if [ -z "$AWS_REGION" ]; then
 fi
 
 # Default to syncing entire repo if SOURCE_DIR not set.
-if [ -z "$SOURCE_DIR" ]; then
-  SOURCE_DIR="."
-fi
+SOURCE_DIR=${SOURCE_DIR:-.}
 
 # Create a dedicated profile for this action to avoid
 # conflicts with other actions.
