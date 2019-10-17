@@ -22,9 +22,14 @@ if [ -z "$AWS_REGION" ]; then
   exit 1
 fi
 
+# Default to CLI defined AWS endpoint
+ENDPOINT_APPEND=""
+if [ "$AWS_S3_ENDPOINT" ]; then
+  ENDPOINT_APPEND="--endpoint-url $AWS_S3_ENDPOINT"
+fi
+
 # Default to syncing entire repo if SOURCE_DIR not set.
 SOURCE_DIR=${SOURCE_DIR:-.}
-ENDPOINT_APPEND=${"--endpoint-url $AWS_S3_ENDPOINT":-}
 
 # Create a dedicated profile for this action to avoid
 # conflicts with other actions.
@@ -39,6 +44,5 @@ EOF
 # Use our dedicated profile and suppress verbose messages.
 # All other flags are optional via `args:` directive.
 sh -c "aws s3 sync ${SOURCE_DIR} s3://${AWS_S3_BUCKET}/${DEST_DIR} \
-              --profile s3-sync-action \
-              ${ENDPOINT_APPEND} \
+              --profile s3-sync-action ${ENDPOINT_APPEND} \
               --no-progress $*"
