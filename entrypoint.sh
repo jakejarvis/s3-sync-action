@@ -24,6 +24,7 @@ fi
 
 # Default to syncing entire repo if SOURCE_DIR not set.
 SOURCE_DIR=${SOURCE_DIR:-.}
+ENDPOINT_APPEND=${"--endpoint-url $AWS_S3_ENDPOINT":-}
 
 # Create a dedicated profile for this action to avoid
 # conflicts with other actions.
@@ -39,4 +40,5 @@ EOF
 # All other flags are optional via `args:` directive.
 sh -c "aws s3 sync ${SOURCE_DIR} s3://${AWS_S3_BUCKET}/${DEST_DIR} \
               --profile s3-sync-action \
+              ${ENDPOINT_APPEND} \
               --no-progress $*"
