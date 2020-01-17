@@ -8,9 +8,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-        with:
-          ref: testingbranch
+    - uses: actions/checkout@v2
+      with:
+        repository: simonouyangbcgdv/s3-sync-action
+        path: s3-sync-action
     - name: Run a one-line script
       run: echo Hello, world!
     - name: Run a multi-line script
