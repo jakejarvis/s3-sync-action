@@ -13,7 +13,7 @@ jobs:
         repository: simonouyangbcgdv/s3-sync-action
         path: s3-sync-action
     - name: Run a one-line script
-      run: echo Hello, world, dear!
+      run: echo Hello, world, dear, my branch!
     - name: Run a multi-line script
       run: |
         echo Add other actions to build,
