@@ -37,6 +37,10 @@ ${AWS_REGION}
 text
 EOF
 
+if [ -n "$AWS_S3_MULTIPART_THRESHOLD" ]; then
+  sh -c "aws configure set s3.multipart_threshold ${AWS_S3_MULTIPART_THRESHOLD} --profile s3-sync-action"
+fi
+
 # Sync using our dedicated profile and suppress verbose messages.
 # All other flags are optional via the `args:` directive.
 sh -c "aws s3 sync ${SOURCE_DIR:-.} s3://${AWS_S3_BUCKET}/${DEST_DIR} \
