@@ -44,11 +44,12 @@ sh -c "aws s3 sync ${SOURCE_DIR:-.} s3://${AWS_S3_BUCKET}/${DEST_DIR} \
               --no-progress \
               ${ENDPOINT_APPEND} $*"
 
-# AWS soes not serve html files without extension, so create them
+# AWS does not serve html files without extension, so create them
 # and set the right content type
 if [ -n "$FIX_HTML" ]; then
-  find out -name '*.html' -type f | while read NAME ; do
-    sh -c "aws s3 cp $NAME s3://${AWS_S3_BUCKET}/resources/${NAME%.html} --content-type \"text/html\""
+  find ${SOURCE_DIR:-.} -name '*.html' -type f | while read NAME ; do
+    export TARGET_NAME=${NAME#$SOURCE_DIR/}
+    sh -c "aws s3 cp $NAME s3://${AWS_S3_BUCKET}/${TARGET_NAME%.html} --content-type \"text/html\""
   done
 fi
 
