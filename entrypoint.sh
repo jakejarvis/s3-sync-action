@@ -44,6 +44,21 @@ sh -c "aws s3 sync ${SOURCE_DIR:-.} s3://${AWS_S3_BUCKET}/${DEST_DIR} \
               --no-progress \
               ${ENDPOINT_APPEND} $*"
 
+# AWS soes not serve html files without extension, so create them
+# and set the right content type
+if [ -n "$FIX_HTML" ]; then
+  find out -name '*.html' -type f | while read NAME ; do
+    sh -c "aws s3 cp $NAME s3://${AWS_S3_BUCKET}/resources/${NAME%.html} --content-type \"text/html\""
+  done
+fi
+
+# if a cloudfront id is provided, invalidate the cache so new content
+# is served inmediately
+if [ -n "$AWS_CF_ID" ]; then
+  sh -c "aws cloudfront create-invalidation --distribution-id $AWS_CF_ID --paths \"/*\""
+fi
+
+
 # Clear out credentials after we're done.
 # We need to re-run `aws configure` with bogus input instead of
 # deleting ~/.aws in case there are other credentials living there.
