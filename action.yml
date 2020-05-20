@@ -1,9 +1,15 @@
 name: "S3 Sync"
 description: "Sync a directory to an AWS S3 repository"
 author: jakejarvis
+inputs:
+  args:
+    description: 'Additional arguments for s3 sync'
+    required: false
 runs:
   using: docker
   image: Dockerfile
+  args:
+    - ${{ inputs.args }}
 branding:
   icon: refresh-cw
   color: green
