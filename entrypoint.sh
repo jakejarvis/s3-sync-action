@@ -44,6 +44,14 @@ sh -c "aws s3 sync ${SOURCE_DIR:-.} s3://${AWS_S3_BUCKET}/${DEST_DIR} \
               --no-progress \
               ${ENDPOINT_APPEND} $*"
 
+# Rename xxx.html to xxx, then upload to s3 with Content-type: text/html
+for src_file in $(\find . -name '*.html'); do
+  dest_file=$(echo $src_file | sed -e 's/\.html$//g' | sed -e "s/\.\/${SOURCE_DIR}\///g")
+  dest_path=$(echo "/${DEST_DIR:-}/${dest_file}" | sed -E 's/\/+/\//g')
+  sh -c "aws s3 cp ${src_file} s3://${AWS_S3_BUCKET}${dest_path} \
+              --content-type text/html"
+done
+
 # Clear out credentials after we're done.
 # We need to re-run `aws configure` with bogus input instead of
 # deleting ~/.aws in case there are other credentials living there.
