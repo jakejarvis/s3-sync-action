@@ -27,15 +27,6 @@ if [ -n "$AWS_S3_ENDPOINT" ]; then
   ENDPOINT_APPEND="--endpoint-url $AWS_S3_ENDPOINT"
 fi
 
-# Assume Role if user sets AWS_ASSUMED_ROLE.
-if [ -n "$AWS_ASSUMED_ROLE" ]; then
-  aws iam list-roles --query "Roles[?RoleName == '$AWS_ASSUMED_ROLE'].[RoleName, Arn]"
-  aws sts assume-role --role-arn "$AWS_ASSUMED_ROLE" --role-session-name "S3 Update CI"
-  export AWS_ACCESS_KEY_ID=RoleAccessKeyID
-  export AWS_SECRET_ACCESS_KEY=RoleSecretKey
-  export AWS_SESSION_TOKEN=RoleSessionToken
-fi
-
 # Create a dedicated profile for this action to avoid conflicts
 # with past/future actions.
 # https://github.com/jakejarvis/s3-sync-action/issues/1
@@ -45,6 +36,15 @@ ${AWS_SECRET_ACCESS_KEY}
 ${AWS_REGION}
 text
 EOF
+
+# Assume Role if user sets AWS_ASSUMED_ROLE.
+if [ -n "$AWS_ASSUMED_ROLE" ]; then
+  aws iam list-roles --query "Roles[?RoleName == '$AWS_ASSUMED_ROLE'].[RoleName, Arn]"
+  aws sts assume-role --role-arn "$AWS_ASSUMED_ROLE" --role-session-name "S3 Update CI"
+  export AWS_ACCESS_KEY_ID=RoleAccessKeyID
+  export AWS_SECRET_ACCESS_KEY=RoleSecretKey
+  export AWS_SESSION_TOKEN=RoleSessionToken
+fi
 
 # Sync using our dedicated profile and suppress verbose messages.
 # All other flags are optional via the `args:` directive.
