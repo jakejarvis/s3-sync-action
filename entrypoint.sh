@@ -39,12 +39,13 @@ EOF
 
 # Assume Role if user sets AWS_ASSUMED_ROLE.
 if [ -n "$AWS_ASSUMED_ROLE" ]; then
-  aws sts get-caller-identity
-  aws iam list-roles --query "Roles[?RoleName == '$AWS_ASSUMED_ROLE'].[RoleName, Arn]"
-  aws sts assume-role --role-arn "$AWS_ASSUMED_ROLE" --role-session-name "S3 Update CI"
-  export AWS_ACCESS_KEY_ID=RoleAccessKeyID
-  export AWS_SECRET_ACCESS_KEY=RoleSecretKey
-  export AWS_SESSION_TOKEN=RoleSessionToken
+  role_arn="$AWS_ASSUMED_ROLE"
+#   aws sts get-caller-identity
+#   aws iam list-roles --query "Roles[?RoleName == '$AWS_ASSUMED_ROLE'].[RoleName, Arn]"
+#   aws sts assume-role --role-arn "$AWS_ASSUMED_ROLE" --role-session-name "S3 Update CI"
+#   export AWS_ACCESS_KEY_ID=RoleAccessKeyID
+#   export AWS_SECRET_ACCESS_KEY=RoleSecretKey
+#   export AWS_SESSION_TOKEN=RoleSessionToken
 fi
 
 # Sync using our dedicated profile and suppress verbose messages.
