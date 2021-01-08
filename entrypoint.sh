@@ -29,7 +29,11 @@ fi
 
 # Assume Role if user sets AWS_ASSUMED_ROLE.
 if [ -n "$AWS_ASSUMED_ROLE" ]; then
+  aws iam list-roles --query "Roles[?RoleName == '$AWS_ASSUMED_ROLE'].[RoleName, Arn]"
   aws sts assume-role --role-arn "$AWS_ASSUMED_ROLE" --role-session-name "S3 Update CI"
+  export AWS_ACCESS_KEY_ID=RoleAccessKeyID
+  export AWS_SECRET_ACCESS_KEY=RoleSecretKey
+  export AWS_SESSION_TOKEN=RoleSessionToken
 fi
 
 # Create a dedicated profile for this action to avoid conflicts
