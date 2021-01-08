@@ -27,6 +27,11 @@ if [ -n "$AWS_S3_ENDPOINT" ]; then
   ENDPOINT_APPEND="--endpoint-url $AWS_S3_ENDPOINT"
 fi
 
+# Assume Role if user sets AWS_ASSUMED_ROLE.
+if [ -n "$AWS_ASSUMED_ROLE" ]; then
+  aws sts assume-role --role-arn "$AWS_ASSUMED_ROLE" --role-session-name "S3 Update CI"
+fi
+
 # Create a dedicated profile for this action to avoid conflicts
 # with past/future actions.
 # https://github.com/jakejarvis/s3-sync-action/issues/1
