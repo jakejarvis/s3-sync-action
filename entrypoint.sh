@@ -27,20 +27,34 @@ if [ -n "$AWS_S3_ENDPOINT" ]; then
   ENDPOINT_APPEND="--endpoint-url $AWS_S3_ENDPOINT"
 fi
 
+AWS_PROFILE=s3-sync-action
+
 # Create a dedicated profile for this action to avoid conflicts
 # with past/future actions.
 # https://github.com/jakejarvis/s3-sync-action/issues/1
-aws configure --profile s3-sync-action <<-EOF > /dev/null 2>&1
+aws configure --profile ${AWS_PROFILE} <<-EOF > /dev/null 2>&1
 ${AWS_ACCESS_KEY_ID}
 ${AWS_SECRET_ACCESS_KEY}
 ${AWS_REGION}
 text
 EOF
 
+if [ -n "$AWS_ASSUME_ROLE_ARN" ]; then
+  echo "Assuming role: ${AWS_ASSUME_ROLE_ARN}"
+
+  # Create a profile to assume the role with.
+  # https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-role.html
+  echo "[profile s3-sync-action-assume]" >> ~/.aws/config
+  echo "role_arn = ${AWS_ASSUME_ROLE_ARN}" >> ~/.aws/config
+  echo "source_profile = ${AWS_PROFILE}" >> ~/.aws/config
+
+  AWS_PROFILE=s3-sync-action-assume
+ fi
+
 # Sync using our dedicated profile and suppress verbose messages.
 # All other flags are optional via the `args:` directive.
 sh -c "aws s3 sync ${SOURCE_DIR:-.} s3://${AWS_S3_BUCKET}/${DEST_DIR} \
-              --profile s3-sync-action \
+              --profile ${AWS_PROFILE} \
               --no-progress \
               ${ENDPOINT_APPEND} $*"
 
