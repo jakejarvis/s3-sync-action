@@ -66,6 +66,12 @@ if [ -n "$AWS_ASSUMED_ROLE" ]; then
           --role-session-name "S3 Update CI" \
           --duration-seconds 600
           2>/dev/null) || { echo "Error assuming role"; exit 1; }
+  
+  AWS_ACCESS_KEY_ID=$(echo ${JSON} | jq --raw-output ".Credentials[\"AccessKeyId\"]")
+  AWS_SECRET_ACCESS_KEY=$(echo ${JSON} | jq --raw-output ".Credentials[\"SecretAccessKey\"]")
+  AWS_SESSION_TOKEN=$(echo ${JSON} | jq --raw-output ".Credentials[\"SessionToken\"]")
+  AWS_EXPIRATION=$(echo ${JSON} | jq --raw-output ".Credentials[\"Expiration\"]")
+  
   unset AWS_PROFILE
   
   export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
@@ -74,7 +80,7 @@ if [ -n "$AWS_ASSUMED_ROLE" ]; then
   export AWS_ACCOUNT=${aws_account}
   export AWS_ACCOUNT_ID=${ACCOUNT}
   
-  SaveCredentials
+  # SaveCredentials
 fi
 
 # Sync using our dedicated profile and suppress verbose messages.
