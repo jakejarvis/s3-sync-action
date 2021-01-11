@@ -1,5 +1,23 @@
 #!/bin/sh
 
+SaveCredentials() {
+  [[ -d ~/.assumerole.d/cache ]] || mkdir -p ~/.assumerole.d/cache
+
+  echo "export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" > ~/.assumerole.d/cache/${aws_account}
+  echo "export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" >> ~/.assumerole.d/cache/${aws_account}
+  echo "export AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}" >> ~/.assumerole.d/cache/${aws_account}
+  echo "export ROLE=${ROLE}" >> ~/.assumerole.d/cache/${aws_account}
+  echo "export ACCOUNT=${ACCOUNT}" >> ~/.assumerole.d/cache/${aws_account}
+  echo "export AWS_ACCOUNT_ID=${ACCOUNT}" >> ~/.assumerole.d/cache/${aws_account}
+  echo "export aws_account=${aws_account}" >> ~/.assumerole.d/cache/${aws_account}
+  echo "export AWS_ACCOUNT=${aws_account}" >> ~/.assumerole.d/cache/${aws_account}
+  echo "export AWS_EXPIRATION=${AWS_EXPIRATION}" >> ~/.assumerole.d/cache/${aws_account}
+  echo "export SSHKEY=${SSHKEY}" >> ~/.assumerole.d/cache/${aws_account}
+  echo ${ASSUMEROLE_ENV} >> ~/.assumerole.d/cache/${aws_account}
+
+  chmod 0600 ~/.assumerole.d/cache/${aws_account}
+}
+
 set -e
 
 if [ -z "$AWS_S3_BUCKET" ]; then
@@ -40,12 +58,29 @@ EOF
 # Assume Role if user sets AWS_ASSUMED_ROLE.
 if [ -n "$AWS_ASSUMED_ROLE" ]; then
   role_arn="$AWS_ASSUMED_ROLE"
-#   aws sts get-caller-identity
-#   aws iam list-roles --query "Roles[?RoleName == '$AWS_ASSUMED_ROLE'].[RoleName, Arn]"
-#   aws sts assume-role --role-arn "$AWS_ASSUMED_ROLE" --role-session-name "S3 Update CI"
-#   export AWS_ACCESS_KEY_ID=RoleAccessKeyID
-#   export AWS_SECRET_ACCESS_KEY=RoleSecretKey
-#   export AWS_SESSION_TOKEN=RoleSessionToken
+  
+  export AWS_PROFILE=${PROFILE}
+  
+  JSON=$(aws sts assume-role \
+          --role-arn "$AWS_ASSUMED_ROLE" \
+          --role-session-name "S3 Update CI" \
+          --duration-seconds 600
+          2>/dev/null) || { echo "Error assuming role"; exit 1; }
+          
+  AWS_ACCESS_KEY_ID=$(echo ${JSON} | jq --raw-output ".Credentials[\"AccessKeyId\"]")
+  AWS_SECRET_ACCESS_KEY=$(echo ${JSON} | jq --raw-output ".Credentials[\"SecretAccessKey\"]")
+  AWS_SESSION_TOKEN=$(echo ${JSON} | jq --raw-output ".Credentials[\"SessionToken\"]")
+  AWS_EXPIRATION=$(echo ${JSON} | jq --raw-output ".Credentials[\"Expiration\"]")
+  
+  unset AWS_PROFILE
+  
+  export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+  export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+  export AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}
+  export AWS_ACCOUNT=${aws_account}
+  export AWS_ACCOUNT_ID=${ACCOUNT}
+  
+  SaveCredentials
 fi
 
 # Sync using our dedicated profile and suppress verbose messages.
