@@ -1,5 +1,7 @@
 #!/bin/sh
 
+apt-get install jq
+
 SaveCredentials() {
   [[ -d ~/.assumerole.d/cache ]] || mkdir -p ~/.assumerole.d/cache
 
