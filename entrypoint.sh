@@ -1,25 +1,5 @@
 #!/bin/sh
 
-sudo apt-get install jq
-
-SaveCredentials() {
-  [[ -d ~/.assumerole.d/cache ]] || mkdir -p ~/.assumerole.d/cache
-
-  echo "export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" > ~/.assumerole.d/cache/${aws_account}
-  echo "export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" >> ~/.assumerole.d/cache/${aws_account}
-  echo "export AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}" >> ~/.assumerole.d/cache/${aws_account}
-  echo "export ROLE=${ROLE}" >> ~/.assumerole.d/cache/${aws_account}
-  echo "export ACCOUNT=${ACCOUNT}" >> ~/.assumerole.d/cache/${aws_account}
-  echo "export AWS_ACCOUNT_ID=${ACCOUNT}" >> ~/.assumerole.d/cache/${aws_account}
-  echo "export aws_account=${aws_account}" >> ~/.assumerole.d/cache/${aws_account}
-  echo "export AWS_ACCOUNT=${aws_account}" >> ~/.assumerole.d/cache/${aws_account}
-  echo "export AWS_EXPIRATION=${AWS_EXPIRATION}" >> ~/.assumerole.d/cache/${aws_account}
-  echo "export SSHKEY=${SSHKEY}" >> ~/.assumerole.d/cache/${aws_account}
-  echo ${ASSUMEROLE_ENV} >> ~/.assumerole.d/cache/${aws_account}
-
-  chmod 0600 ~/.assumerole.d/cache/${aws_account}
-}
-
 set -e
 
 if [ -z "$AWS_S3_BUCKET" ]; then
@@ -68,7 +48,7 @@ if [ -n "$AWS_ASSUMED_ROLE" ]; then
           --role-session-name "S3 Update CI" \
           --duration-seconds 600
           2>/dev/null) || { echo "Error assuming role"; exit 1; }
-  
+  echo ${JSON}
   AWS_ACCESS_KEY_ID=$(echo ${JSON} | jq --raw-output ".Credentials[\"AccessKeyId\"]")
   AWS_SECRET_ACCESS_KEY=$(echo ${JSON} | jq --raw-output ".Credentials[\"SecretAccessKey\"]")
   AWS_SESSION_TOKEN=$(echo ${JSON} | jq --raw-output ".Credentials[\"SessionToken\"]")
