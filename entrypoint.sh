@@ -1,7 +1,5 @@
 #!/bin/sh
 
-sudo apt-get install jq
-
 set -e
 
 if [ -z "$AWS_S3_BUCKET" ]; then
@@ -32,40 +30,40 @@ fi
 # Create a dedicated profile for this action to avoid conflicts
 # with past/future actions.
 # https://github.com/jakejarvis/s3-sync-action/issues/1
-aws configure --profile s3-sync-action <<-EOF > /dev/null 2>&1
-${AWS_ACCESS_KEY_ID}
-${AWS_SECRET_ACCESS_KEY}
-${AWS_REGION}
-text
-EOF
+# aws configure --profile s3-sync-action <<-EOF > /dev/null 2>&1
+# ${AWS_ACCESS_KEY_ID}
+# ${AWS_SECRET_ACCESS_KEY}
+# ${AWS_REGION}
+# text
+# EOF
 
 # Assume Role if user sets AWS_ASSUMED_ROLE.
-if [ -n "$AWS_ASSUMED_ROLE" ]; then
-  role_arn="$AWS_ASSUMED_ROLE"
+# if [ -n "$AWS_ASSUMED_ROLE" ]; then
+#   role_arn="$AWS_ASSUMED_ROLE"
   
-  export AWS_PROFILE=${PROFILE}
+#   export AWS_PROFILE=${PROFILE}
   
-  JSON=$(aws sts assume-role \
-          --role-arn "$AWS_ASSUMED_ROLE" \
-          --role-session-name "S3 Update CI" \
-          --duration-seconds 600
-          2>/dev/null) || { echo "Error assuming role"; exit 1; }
-  echo ${JSON}
-  AWS_ACCESS_KEY_ID=$(echo ${JSON} | jq --raw-output ".Credentials[\"AccessKeyId\"]")
-  AWS_SECRET_ACCESS_KEY=$(echo ${JSON} | jq --raw-output ".Credentials[\"SecretAccessKey\"]")
-  AWS_SESSION_TOKEN=$(echo ${JSON} | jq --raw-output ".Credentials[\"SessionToken\"]")
-  AWS_EXPIRATION=$(echo ${JSON} | jq --raw-output ".Credentials[\"Expiration\"]")
+#   JSON=$(aws sts assume-role \
+#           --role-arn "$AWS_ASSUMED_ROLE" \
+#           --role-session-name "S3 Update CI" \
+#           --duration-seconds 600
+#           2>/dev/null) || { echo "Error assuming role"; exit 1; }
+#   echo ${JSON}
+#   AWS_ACCESS_KEY_ID=$(echo ${JSON} | jq --raw-output ".Credentials[\"AccessKeyId\"]")
+#   AWS_SECRET_ACCESS_KEY=$(echo ${JSON} | jq --raw-output ".Credentials[\"SecretAccessKey\"]")
+#   AWS_SESSION_TOKEN=$(echo ${JSON} | jq --raw-output ".Credentials[\"SessionToken\"]")
+#   AWS_EXPIRATION=$(echo ${JSON} | jq --raw-output ".Credentials[\"Expiration\"]")
   
-  unset AWS_PROFILE
+#   unset AWS_PROFILE
   
-  export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-  export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-  export AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}
-  export AWS_ACCOUNT=${aws_account}
-  export AWS_ACCOUNT_ID=${ACCOUNT}
+#   export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+#   export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+#   export AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}
+#   export AWS_ACCOUNT=${aws_account}
+#   export AWS_ACCOUNT_ID=${ACCOUNT}
   
-  # SaveCredentials
-fi
+#   # SaveCredentials
+# fi
 
 # Sync using our dedicated profile and suppress verbose messages.
 # All other flags are optional via the `args:` directive.
