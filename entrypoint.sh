@@ -27,6 +27,16 @@ if [ -n "$AWS_S3_ENDPOINT" ]; then
   ENDPOINT_APPEND="--endpoint-url $AWS_S3_ENDPOINT"
 fi
 
+# Use the AWS directory as source to sync downstream.
+# Default to false if AWS_DOWNSTREAM not set.
+if [ "$AWS_DOWNSTREAM" = true ]; then
+  SOURCE_PATH="s3://${AWS_S3_BUCKET}/${DEST_DIR}" # AWS S3 directory as source
+  DEST_PATH="${SOURCE_DIR:-.}" # Local directory as destination
+else 
+  SOURCE_PATH="${SOURCE_DIR:-.}" # Local directory as source
+  DEST_PATH="s3://${AWS_S3_BUCKET}/${DEST_DIR}" # AWS S3 directory as destination
+fi
+
 # Create a dedicated profile for this action to avoid conflicts
 # with past/future actions.
 # https://github.com/jakejarvis/s3-sync-action/issues/1
@@ -39,7 +49,7 @@ EOF
 
 # Sync using our dedicated profile and suppress verbose messages.
 # All other flags are optional via the `args:` directive.
-sh -c "aws s3 sync ${SOURCE_DIR:-.} s3://${AWS_S3_BUCKET}/${DEST_DIR} \
+sh -c "aws s3 sync ${SOURCE_PATH} ${DEST_PATH} \
               --profile s3-sync-action \
               --no-progress \
               ${ENDPOINT_APPEND} $*"
