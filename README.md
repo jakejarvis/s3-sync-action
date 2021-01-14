@@ -40,7 +40,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ASSUMED_ROLE }}
           
-    - uses: brajm008/s3-sync-action@master
+    - uses: jakejarvis/s3-sync-action@master
       with:
         args: --acl public-read --follow-symlinks --delete
       env:
