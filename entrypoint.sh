@@ -40,14 +40,15 @@ EOF
 # Sync using our dedicated profile and suppress verbose messages.
 # All other flags are optional via the `args:` directive.
 CMD_PREFIX="aws s3 sync"
-if [ -z "$AWS_S3_SSE_KMS_KEY_ID" ]; then
+if [ -n "$AWS_S3_SSE_KMS_KEY_ID" ]; then
   CMD_PREFIX="${CMD_PREFIX} --sse aws:kms --sse-kms-key-id ${AWS_S3_SSE_KMS_KEY_ID}"
 fi
 
-sh -c "${CMD_PREFIX} ${SOURCE_DIR:-.} s3://${AWS_S3_BUCKET}/${DEST_DIR} \
+CMD="${CMD_PREFIX} ${SOURCE_DIR:-.} s3://${AWS_S3_BUCKET}/${DEST_DIR} \
               --profile s3-sync-action \
               --no-progress \
               ${ENDPOINT_APPEND} $*"
+sh -c $CMD
 
 # Clear out credentials after we're done.
 # We need to re-run `aws configure` with bogus input instead of
