@@ -58,7 +58,7 @@ The following settings must be passed as environment variables as shown in the e
 | `AWS_DOWNSTREAM` | Use your remote AWS directory to synchronize downstream (download) with your local directory. Set to `false` by default. | `env` | No | `us-east-1` |
 | `SOURCE_DIR` | The local directory (or file) you wish to sync with S3. For example, `public`. Defaults to your entire repository. | `env` | No | `./` (root of cloned repository) |
 | `DEST_DIR` | The directory inside of the S3 bucket you wish to sync with. For example, `my_project/assets`. Defaults to the root of the bucket. | `env` | No | `/` (root of bucket) |
-| `AWS_S3_SSE_KMS_KEY_ID` | Your sse kms id to upload to S3 with encryption. For example, `aaaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee`. Defaults to None which means no encryption. | `env` | No | N/A                                                                | |
+| `AWS_S3_SSE_KMS_KEY_ID` | [SSE-KMS id](https://docs.aws.amazon.com/AmazonS3/latest/userguide/serv-side-encryption.html) | `${{ secrets.AWS_S3_SSE_KMS_KEY_ID }}` | No | N/A |
 
 
 ### AWS ROLE config
