@@ -1,0 +1,17 @@
+# Basic dependabot.yml file for Dockerfile dependency updates
+
+version: 2
+updates:
+  # Enable version updates for Docker
+  - package-ecosystem: "docker"
+    # Look for a `Dockerfile` in the `root` directory
+    directory: "/"
+    # Check for updates daily
+    schedule:
+      interval: "daily"
+
+  # Enable version updates for Python pip
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "daily"
