@@ -10,10 +10,9 @@ LABEL repository="https://github.com/jakejarvis/s3-sync-action"
 LABEL homepage="https://jarv.is/"
 LABEL maintainer="Jake Jarvis <jake@jarv.is>"
 
-# https://github.com/aws/aws-cli/blob/master/CHANGELOG.rst
-ENV AWSCLI_VERSION='1.18.14'
+COPY requirements.txt /data/requirements.txt
 
-RUN pip install --quiet --no-cache-dir awscli==${AWSCLI_VERSION}
+RUN pip install --quiet --no-cache-dir -r /data/requirements.txt
 
 ADD entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
