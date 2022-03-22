@@ -45,7 +45,7 @@ jobs:
 
 ### Configuration
 
-The following settings must be passed as environment variables as shown in the example. Sensitive information, especially `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`, should be [set as encrypted secrets](https://help.github.com/en/articles/virtual-environments-for-github-actions#creating-and-using-secrets-encrypted-variables) — otherwise, they'll be public to anyone browsing your repository's source code and CI logs.
+The following settings must be passed as environment variables as shown in the example. Sensitive information, especially `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`, should be [set as encrypted secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets) — otherwise, they'll be public to anyone browsing your repository's source code and CI logs.
 
 | Key | Value | Suggested Type | Required | Default |
 | ------------- | ------------- | ------------- | ------------- | ------------- |
