@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - uses: lks21c/s3-sync-with-kms@master
+    - uses: jakejarvis/s3-sync-action@master
       with:
         args: --acl public-read --follow-symlinks --delete
       env:
@@ -52,13 +52,13 @@ The following settings must be passed as environment variables as shown in the e
 | --- | ----- | -------------- |--------- | ------- |
 | `AWS_ACCESS_KEY_ID` | [AWS Access Key](https://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html) | `${{ secrets.AWS_ACCESS_KEY_ID }}` | **Yes** | N/A |
 | `AWS_SECRET_ACCESS_KEY` | [AWS Secret Access Key](https://docs.aws.amazon.com/general/latest/gr/managing-aws-access-keys.html) | `${{ secrets.AWS_SECRET_ACCESS_KEY }}` | **Yes** | N/A |
-| `AWS_S3_BUCKET` | bucket-name | `secret env` | **Yes** | N/A                                                                |
-| `AWS_REGION` | [bucket region](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions) | `env` | No | `us-east-1`                                                        |
-| `AWS_S3_ENDPOINT` | The endpoint URL of the bucket you're syncing to. Can be used for [VPC scenarios](https://aws.amazon.com/blogs/aws/new-vpc-endpoint-for-amazon-s3/) or for non-AWS services using the S3 API, like [DigitalOcean Spaces](https://www.digitalocean.com/community/tools/adapting-an-existing-aws-s3-application-to-digitalocean-spaces). | `env` | No | Automatic (`s3.amazonaws.com` or AWS's region-specific equivalent) |
-| `AWS_DOWNSTREAM` | Use your remote AWS directory to synchronize downstream (download) with your local directory. Set to `false` by default. | `env` | No | `us-east-1` |
+| `AWS_S3_BUCKET` | bucket-name | `secret env` | **Yes** | N/A |
+| `AWS_REGION` | [bucket region](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html#concepts-available-regions) | `env` | No | `us-east-1` |
+| `AWS_S3_ENDPOINT` | sync endpoint | `env` | No | Automatic (`s3.amazonaws.com` or AWS's region-specific equivalent) |
+| `AWS_DOWNSTREAM` | synchronize downstream with your local directory | `env` | No | `us-east-1` |
 | `AWS_ASSUME_ROLE_ARN` | role ARN. | `env` | No | N/A |
-| `SOURCE_DIR` | The local directory (or file) you wish to sync with S3. For example, `public`. Defaults to your entire repository. | `env` | No | `./` (root of cloned repository) |
-| `DEST_DIR` | The directory inside of the S3 bucket you wish to sync with. For example, `my_project/assets`. Defaults to the root of the bucket. | `env` | No | `/` (root of bucket) |
+| `SOURCE_DIR` | The local directory (or file) you wish to sync with S3. For example, `public` | `env` | No | `./` (root of cloned repository) |
+| `DEST_DIR` | The directory inside of the S3 bucket you wish to sync with. For example, `my_project/assets` | `env` | No | `/` (root of bucket) |
 | `AWS_S3_SSE_KMS_KEY_ID` | [SSE-KMS id](https://docs.aws.amazon.com/AmazonS3/latest/userguide/serv-side-encryption.html) | `${{ secrets.AWS_S3_SSE_KMS_KEY_ID }}` | No | N/A |
 
 
