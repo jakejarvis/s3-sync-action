@@ -42,7 +42,7 @@ AWS_PROFILE=s3-sync-action
 # Create a dedicated profile for this action to avoid conflicts
 # with past/future actions.
 # https://github.com/jakejarvis/s3-sync-action/issues/1
-aws configure --profile ${AWS_PROFILE} <<-EOF >/dev/null 2>&1
+aws configure --profile ${AWS_PROFILE} <<- EOF > /dev/null 2>&1
 ${AWS_ACCESS_KEY_ID}
 ${AWS_SECRET_ACCESS_KEY}
 ${AWS_REGION}
@@ -54,9 +54,11 @@ if [ -n "$AWS_ASSUME_ROLE_ARN" ]; then
 
   # Create a profile to assume the role with.
   # https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-role.html
-  echo "[profile s3-sync-action-assume]" >>~/.aws/config
-  echo "role_arn = ${AWS_ASSUME_ROLE_ARN}" >>~/.aws/config
-  echo "source_profile = ${AWS_PROFILE}" >>~/.aws/config
+  {
+    echo "[profile s3-sync-action-assume]"
+    "role_arn = ${AWS_ASSUME_ROLE_ARN}"
+    "source_profile = ${AWS_PROFILE}"
+  } >> ~/.aws/config
 
   AWS_PROFILE=s3-sync-action-assume
 fi
@@ -77,7 +79,7 @@ sh -c "${CMD_PREFIX} ${SOURCE_PATH} ${DEST_PATH} \
 # We need to re-run `aws configure` with bogus input instead of
 # deleting ~/.aws in case there are other credentials living there.
 # https://forums.aws.amazon.com/thread.jspa?threadID=148833
-aws configure --profile s3-sync-action <<-EOF >/dev/null 2>&1
+aws configure --profile s3-sync-action <<- EOF > /dev/null 2>&1
 null
 null
 null
