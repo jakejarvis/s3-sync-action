@@ -1,5 +1,5 @@
 name: "S3 Sync"
-description: "Sync a directory to an AWS S3 repository"
+description: "Sync a directory to an AWS S3"
 author: jakejarvis
 runs:
   using: docker
