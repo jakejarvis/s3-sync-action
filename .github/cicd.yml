@@ -1,0 +1,9 @@
+name: "S3 Sync aka ci/cd"
+description: "CICD Sync a directory to an AWS S3 repository"
+author: jakejarvis modified by carlton
+runs:
+  using: docker
+  image: Dockerfile
+branding:
+  icon: refresh-cw
+  color: green
